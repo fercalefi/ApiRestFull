@@ -12,5 +12,7 @@ namespace ApiRestFull.Controllers.Model
         public string SobreNome { get; set; }
         public string Endereco { get; set; }
         public string Genero { get; set; }
+        public string Email { get; set; }
+
     }
 }
