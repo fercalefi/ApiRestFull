@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ApiRestFull.Services.Implementations
 {
     //Interface para implementação do serviço pessoa onde definimos o contrato das operações (crud)
-    public interface IpessoaService
+    public interface IPessoaService
     {
         Pessoa Create(Pessoa pessoa);
         Pessoa FindByYd(long id);
