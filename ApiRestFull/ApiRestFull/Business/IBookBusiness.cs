@@ -1,17 +1,14 @@
-﻿using ApiRestFull.Model;
-using System;
+﻿using ApiRestFull.Data.VO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiRestFull.Business.Implementations
 {
     public interface IBookBusiness
     {
-        Book Create(Book book);
-        Book FindById(long id);
-        List<Book> FindAll();
-        Book Update(Book book);
+        BookVO Create(BookVO book);
+        BookVO FindById(long id);
+        List<BookVO> FindAll();
+        BookVO Update(BookVO book);
         void Delete(long id);
 
     }

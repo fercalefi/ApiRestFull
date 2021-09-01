@@ -1,5 +1,5 @@
 ﻿using ApiRestFull.Business.Implementations;
-using ApiRestFull.Model;
+using ApiRestFull.Data.VO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -37,7 +37,7 @@ namespace ApiRestFull.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Book book)
+        public IActionResult Put([FromBody] BookVO book)
         {
             if (book == null) return BadRequest();
 
@@ -45,7 +45,7 @@ namespace ApiRestFull.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Book book)
+        public IActionResult Post([FromBody] BookVO book)
         {
             if (book == null) return BadRequest();
             return Created("www.globo.com", _bookBusiness.Create(book));

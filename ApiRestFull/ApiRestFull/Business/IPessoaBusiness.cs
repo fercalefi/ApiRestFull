@@ -1,4 +1,4 @@
-﻿using ApiRestFull.Model;
+﻿using ApiRestFull.Data.VO;
 using System.Collections.Generic;
 
 namespace ApiRestFull.Business
@@ -6,10 +6,10 @@ namespace ApiRestFull.Business
     //Interface para implementação do serviço pessoa onde definimos o contrato das operações (crud)
     public interface IPessoaBusiness
     {
-        Pessoa Create(Pessoa pessoa);
-        Pessoa FindById(long id);
-        List<Pessoa> FindAll();
-        Pessoa Update(Pessoa pessoa);
+        PessoaVO Create(PessoaVO pessoa);
+        PessoaVO FindById(long id);
+        List<PessoaVO> FindAll();
+        PessoaVO Update(PessoaVO pessoa);
         void Delete(long id);
 
 

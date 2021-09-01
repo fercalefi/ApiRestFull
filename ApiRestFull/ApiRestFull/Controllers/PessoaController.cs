@@ -1,7 +1,7 @@
-﻿using ApiRestFull.Model;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ApiRestFull.Business;
+using ApiRestFull.Data.VO;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -38,7 +38,7 @@ namespace ApiRestFull.Controllers
             return Ok(pessoa);
         }        
         [HttpPost]
-        public IActionResult Post([FromBody] Pessoa pessoa)
+        public IActionResult Post([FromBody] PessoaVO pessoa)
         {
             if (pessoa == null) return BadRequest();
 
@@ -46,7 +46,7 @@ namespace ApiRestFull.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Pessoa pessoa)
+        public IActionResult Put([FromBody] PessoaVO pessoa)
         {
             if (pessoa == null) return BadRequest();
 

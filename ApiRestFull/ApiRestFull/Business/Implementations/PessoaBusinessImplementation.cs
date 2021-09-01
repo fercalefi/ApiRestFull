@@ -1,5 +1,6 @@
-﻿using ApiRestFull.Model;
-using ApiRestFull.Repository;
+﻿using ApiRestFull.Data.Converter.Implementations;
+using ApiRestFull.Data.VO;
+using ApiRestFull.Model;
 using ApiRestFull.Repository.Generic;
 using System.Collections.Generic;
 
@@ -9,33 +10,36 @@ namespace ApiRestFull.Business.Implementations
     {
         // cria a variavel privada _repository para que a mesma seja setada no construtor
         private readonly IRepository<Pessoa> _repository;
+        private readonly PessoaConverter _converter;
 
         // passa como parametro a classe de context injetada no services
         public PessoaBusinessImplementation(IRepository<Pessoa> repository)
         {
             _repository = repository;
+            _converter = new PessoaConverter();
         }
 
-        public List<Pessoa> FindAll()
+        public List<PessoaVO> FindAll()
         {
-            return _repository.FindAll();
+            return _converter.Parse(_repository.FindAll());
 
         }
 
-        public Pessoa FindById(long id)
+        public PessoaVO FindById(long id)
         {
-            return _repository.FindById(id) ;
+            return _converter.Parse(_repository.FindById(id)) ;
         }
 
-        public Pessoa Create(Pessoa pessoa)
+        public PessoaVO Create(PessoaVO pessoaVO)
         {
-            
-            return _repository.Create(pessoa);
+            var pessoa = _converter.Parse(pessoaVO);
+            return _converter.Parse(_repository.Create(pessoa));
         }
 
-        public Pessoa Update(Pessoa pessoa)
+        public PessoaVO Update(PessoaVO pessoaVO)
         {
-            return _repository.Update(pessoa);
+            var pessoa = _converter.Parse(pessoaVO);
+            return _converter.Parse(_repository.Update(pessoa));
         }
 
         public void Delete(long id)

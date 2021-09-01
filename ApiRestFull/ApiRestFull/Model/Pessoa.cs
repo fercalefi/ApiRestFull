@@ -12,7 +12,6 @@ namespace ApiRestFull.Model
     public class Pessoa: BaseEntity
     {
         // a nottation column faz o bind entre o nome da propriedade e a coluna no banco de dados
-       
         [Column("nome")]
         public string Nome { get; set; }
         
