@@ -1,40 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ApiRestFull.Controllers.Model;
-using ApiRestFull.Services.Implementations;
+﻿using ApiRestFull.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ApiRestFull.Business;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ApiRestFull.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1")]
+    [Route("api/[controller]/v{version:apiVersion}")]
     public class PessoaController : ControllerBase
     {
         private readonly ILogger<PessoaController> _logger;
-        private IPessoaService _pessoaService;
+        private IPessoaBusiness _pessoaBusiness;
 
-        public PessoaController(ILogger<PessoaController> logger, IPessoaService pessoaService)
+        public PessoaController(ILogger<PessoaController> logger, IPessoaBusiness pessoaBusiness)
         {
             _logger = logger;
-            _pessoaService = pessoaService;
+            _pessoaBusiness = pessoaBusiness;
 
         }
         // GET: /<controller>/
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_pessoaService.FindAll());
+            return Ok(_pessoaBusiness.FindAll());
         }  
         
         [HttpGet("{id}")]
         public IActionResult Get(long id)
         {
-            var pessoa = _pessoaService.FindByYd(id);
+            var pessoa = _pessoaBusiness.FindById(id);
 
             if (pessoa == null) return NotFound();
 
@@ -45,7 +42,7 @@ namespace ApiRestFull.Controllers
         {
             if (pessoa == null) return BadRequest();
 
-            return Ok(_pessoaService.Create(pessoa));
+            return Ok(_pessoaBusiness.Create(pessoa));
         }
 
         [HttpPut]
@@ -53,12 +50,13 @@ namespace ApiRestFull.Controllers
         {
             if (pessoa == null) return BadRequest();
 
-            return Ok(_pessoaService.Update(pessoa));
+            return Ok(_pessoaBusiness.Update(pessoa));
         }
+
         [HttpDelete("{id}")]
-        public IActionResult Put(long id)
+        public IActionResult Delete(long id)
         {
-            _pessoaService.Delete(id);
+            _pessoaBusiness.Delete(id);
 
             return NoContent();
         }
