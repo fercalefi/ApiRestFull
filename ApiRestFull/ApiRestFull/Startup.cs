@@ -13,6 +13,7 @@ using ApiRestFull.Repository.Implementations;
 using ApiRestFull.Business.Implementations;
 using Serilog;
 using ApiRestFull.Repository.Generic;
+using Microsoft.Net.Http.Headers;
 
 namespace ApiRestFull
 {
@@ -48,6 +49,16 @@ namespace ApiRestFull
             {
                 MigrateDatabase(connection);
             }
+
+            // alterar para xml no envio/retorno nugget: microsoft.aspnetcore.mvc.formatters.xml
+            services.AddMvc(options =>
+            {
+                options.RespectBrowserAcceptHeader = true;
+                options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml"));
+                options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json"));
+            })
+            .AddXmlSerializerFormatters();
+                ;
 
             // pacote versionamento nuget: Microsoft.AspNetCore.Mvc.Versioning
             services.AddApiVersioning();
