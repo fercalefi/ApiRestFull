@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using ApiRestFull.Business;
 using ApiRestFull.Data.VO;
+using ApiRestFull.Hypermedia.Filters;
+using System.Collections.Generic;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,12 +25,23 @@ namespace ApiRestFull.Controllers
         }
         // GET: /<controller>/
         [HttpGet]
+        // nottations swagger
+        [ProducesResponseType((200), Type = typeof(List<PessoaVO>))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get()
         {
             return Ok(_pessoaBusiness.FindAll());
         }  
         
         [HttpGet("{id}")]
+        [ProducesResponseType((200), Type = typeof(PessoaVO))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get(long id)
         {
             var pessoa = _pessoaBusiness.FindById(id);
@@ -38,6 +51,10 @@ namespace ApiRestFull.Controllers
             return Ok(pessoa);
         }        
         [HttpPost]
+        [ProducesResponseType((200), Type = typeof(PessoaVO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Post([FromBody] PessoaVO pessoa)
         {
             if (pessoa == null) return BadRequest();
@@ -46,6 +63,10 @@ namespace ApiRestFull.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType((200), Type = typeof(PessoaVO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Put([FromBody] PessoaVO pessoa)
         {
             if (pessoa == null) return BadRequest();
@@ -54,6 +75,9 @@ namespace ApiRestFull.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Delete(long id)
         {
             _pessoaBusiness.Delete(id);

@@ -14,6 +14,10 @@ using ApiRestFull.Business.Implementations;
 using Serilog;
 using ApiRestFull.Repository.Generic;
 using Microsoft.Net.Http.Headers;
+using ApiRestFull.Hypermedia.Filters;
+using ApiRestFull.Hypermedia.Enricher;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace ApiRestFull
 {
@@ -36,6 +40,13 @@ namespace ApiRestFull
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //adicionando cors(prevenir problemas de restrição de acesso) para que não se limite a outras urls
+            services.AddCors(options => options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            }));
 
             services.AddControllers();
 
@@ -60,8 +71,29 @@ namespace ApiRestFull
             .AddXmlSerializerFormatters();
                 ;
 
+            var filterOptions = new HyperMediaFilterOptions();
+            filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+
+            services.AddSingleton(filterOptions);
+
             // pacote versionamento nuget: Microsoft.AspNetCore.Mvc.Versioning
             services.AddApiVersioning();
+
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "Api RestFull do zero ao azure com aspnetcore e Docker",
+                        Version = "v1",
+                        Description = "Desenvolvimento api Restful",
+                        Contact = new OpenApiContact
+                        {
+                            Name = "Fernando Calefi",
+                            Url = new Uri("https://github.com/fercalefi/ApiRestFull")
+                        }
+                    });
+            });
+
 
             //Injeção de dependencia - busines para ser injetado no controller
             services.AddScoped<IPessoaBusiness, PessoaBusinessImplementation>();
@@ -90,11 +122,30 @@ namespace ApiRestFull
 
             app.UseRouting();
 
+            // sempre depois de usehhttpsrediretion e userouting e antes de useendpoints
+            app.UseCors();
+
+            // gera o json com a documentação
+            app.UseSwagger();
+
+            // gera o html
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api RestFull do zero ao azure com aspnetcore e Docker - v1");
+            });
+
+            var option = new RewriteOptions();
+
+            // redirecionar para pagina do swagger
+            option.AddRedirect("^$", "swagger");
+            // configurar a nossa swaggerpage
+            app.UseRewriter(option);
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
             });
         }
 

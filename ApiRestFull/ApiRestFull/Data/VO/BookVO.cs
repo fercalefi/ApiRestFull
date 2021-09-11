@@ -1,10 +1,13 @@
-﻿using ApiRestFull.Model.Base;
+﻿using ApiRestFull.Hypermedia;
+using ApiRestFull.Hypermedia.Abstract;
+using ApiRestFull.Model.Base;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ApiRestFull.Data.VO
 {
-    public class BookVO
+    public class BookVO: ISupportsHyperMedia
     {
         public long Id { get; set; }
         public string Author { get; set; }
@@ -14,5 +17,6 @@ namespace ApiRestFull.Data.VO
         public decimal Price { get; set; }
 
         public string Title { get; set; }
+        public List<HyperMediaLink> Links { get; set; } = new List<HyperMediaLink>();
     }
 }
