@@ -21,5 +21,6 @@ namespace ApiRestFull.Model.Context
 
         public DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Book> Books { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

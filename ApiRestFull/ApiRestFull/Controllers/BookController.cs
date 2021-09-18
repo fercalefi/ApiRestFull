@@ -1,6 +1,7 @@
 ﻿using ApiRestFull.Business.Implementations;
 using ApiRestFull.Data.VO;
 using ApiRestFull.Hypermedia.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace ApiRestFull.Controllers
 {
     [ApiController]
     [ApiVersion("1")]
+    [Authorize("Bearer")]
     [Route("api/[controller]/v{version:apiVersion}")]
     public class BookController : ControllerBase
     {

@@ -18,6 +18,14 @@ using ApiRestFull.Hypermedia.Filters;
 using ApiRestFull.Hypermedia.Enricher;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Rewrite;
+using ApiRestFull.Services.Implementations;
+using ApiRestFull.Services;
+using Microsoft.Extensions.Options;
+using ApiRestFull.Configurations;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApiRestFull
 {
@@ -40,6 +48,49 @@ namespace ApiRestFull
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
+            // armazenando as configurações de token em uma classe.
+            var tokenConfigurations = new TokenConfiguration();
+            new ConfigureFromConfigurationOptions<TokenConfiguration>(
+                Configuration.GetSection("TokenConfigurations")
+                )
+                .Configure(tokenConfigurations);
+
+            //adicionando apenas uma instancia do serviço, não tem duas configurações.
+            services.AddSingleton(tokenConfigurations);
+
+            // definindo parametros de autenticaçaõ
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+           .AddJwtBearer(options => 
+           {
+               options.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuer = true,
+                   ValidateAudience = true,
+                   ValidateLifetime = true,
+                   ValidateIssuerSigningKey = true,
+                   ValidIssuer = tokenConfigurations.Issuer,
+                   ValidAudience = tokenConfigurations.Audience,
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.Secret))
+               };
+           });
+
+            // adicionando autorização ao serviço
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build());
+
+            });
+
+
+
+
             //adicionando cors(prevenir problemas de restrição de acesso) para que não se limite a outras urls
             services.AddCors(options => options.AddDefaultPolicy(builder =>
             {
@@ -98,10 +149,19 @@ namespace ApiRestFull
             //Injeção de dependencia - busines para ser injetado no controller
             services.AddScoped<IPessoaBusiness, PessoaBusinessImplementation>();
 
-            //Injeção de dependencia - repository para ser injetado no business
-            services.AddScoped<IPessoaRepository, PessoaRepositoryImplementation>();
+          
 
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+            services.AddScoped<ILoginBusiness, LoginBusinessImplementation>();
+            services.AddTransient<ITokenService, TokenService>();
+
+
+
+            //Injeção de dependencia - userrepository 
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            //Injeção de dependencia - repository para ser injetado no business
+            services.AddScoped<IPessoaRepository, PessoaRepositoryImplementation>();
 
             //Injeção de dependencia do repositorio generico para ser usado no Business
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
