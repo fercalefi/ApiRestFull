@@ -101,6 +101,8 @@ namespace ApiRestFull
 
             services.AddControllers();
 
+            services.AddControllers().AddNewtonsoftJson();
+
             // Vai no arquivo de configuração appsetings.json e busca o conteudo das chaves
             var connection = Configuration["MySQLConnection:MySQLConnectionString"];
 

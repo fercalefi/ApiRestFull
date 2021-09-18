@@ -1436,6 +1436,61 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Refresh",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"accessToken\": \"{{accessToken}}\",\r\n    \"refreshToken\": \"{{refreshToken}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/v{{version}}/refresh",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"v{{version}}",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Revoke",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/Auth/v{{version}}/revoke",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"Auth",
+										"v{{version}}",
+										"revoke"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
