@@ -51,7 +51,8 @@ namespace ApiRestFull.Controllers
             if (pessoa == null) return NotFound();
 
             return Ok(pessoa);
-        }        
+        } 
+        
         [HttpPost]
         [ProducesResponseType((200), Type = typeof(PessoaVO))]
         [ProducesResponseType(400)]
@@ -75,6 +76,20 @@ namespace ApiRestFull.Controllers
 
             return Ok(_pessoaBusiness.Update(pessoa));
         }
+
+        [HttpPatch("{id}")]
+        [ProducesResponseType((200), Type = typeof(PessoaVO))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [TypeFilter(typeof(HyperMediaFilter))]
+        public IActionResult Patch(long id)
+        {
+            var pessoa = _pessoaBusiness.Disable(id);
+            return Ok(pessoa);
+        }
+
+
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]

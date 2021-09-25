@@ -11,6 +11,7 @@ namespace ApiRestFull.Business
         List<PessoaVO> FindAll();
         PessoaVO Update(PessoaVO pessoa);
         void Delete(long id);
+        PessoaVO Disable(long id);
 
 
     }

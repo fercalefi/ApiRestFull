@@ -1,6 +1,7 @@
 ﻿using ApiRestFull.Data.Converter.Implementations;
 using ApiRestFull.Data.VO;
 using ApiRestFull.Model;
+using ApiRestFull.Repository;
 using ApiRestFull.Repository.Generic;
 using System.Collections.Generic;
 
@@ -9,11 +10,11 @@ namespace ApiRestFull.Business.Implementations
     public class PessoaBusinessImplementation : IPessoaBusiness
     {
         // cria a variavel privada _repository para que a mesma seja setada no construtor
-        private readonly IRepository<Pessoa> _repository;
+        private readonly IPessoaRepository _repository;
         private readonly PessoaConverter _converter;
 
         // passa como parametro a classe de context injetada no services
-        public PessoaBusinessImplementation(IRepository<Pessoa> repository)
+        public PessoaBusinessImplementation(IPessoaRepository repository)
         {
             _repository = repository;
             _converter = new PessoaConverter();
@@ -48,5 +49,10 @@ namespace ApiRestFull.Business.Implementations
             
         }
 
+        public PessoaVO Disable(long id)
+        {
+            var pessoaEntity = _repository.Disable(id);
+            return _converter.Parse(pessoaEntity);
+        }
     }
 }

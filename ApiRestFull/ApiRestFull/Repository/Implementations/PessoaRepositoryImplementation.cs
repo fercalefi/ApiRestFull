@@ -1,92 +1,36 @@
 ﻿using ApiRestFull.Model;
 using ApiRestFull.Model.Context;
+using ApiRestFull.Repository.Generic;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ApiRestFull.Repository.Implementations
 {
-    public class PessoaRepositoryImplementation : IPessoaRepository
+    public class PessoaRepositoryImplementation : GenericRepository<Pessoa>, IPessoaRepository
     {
-        // cria a variavel privada _context para que a mesma seja setada no construtor com os dados da conexão
-        private MySQLContext _context;
+        // construtor pegando o contexto da classe base. Por isso a mudança para protectetd no context
+        public PessoaRepositoryImplementation(MySQLContext context) : base(context) { }
 
-        // passa como parametro a classe de context injetada no services
-        public PessoaRepositoryImplementation(MySQLContext context)
+        public Pessoa Disable(long id)
         {
-            _context = context;
-        }
+           if (!_context.Pessoas.Any(p => p.Id.Equals(id))) return null;
 
-        public List<Pessoa> FindAll()
-        {
-            return _context.Pessoas.ToList();
-        }
+            var user = _context.Pessoas.SingleOrDefault(p => p.Id.Equals(id));
 
-        public Pessoa FindByYd(long id)
-        {
-            return _context.Pessoas.SingleOrDefault(p => p.Id.Equals(id));
-        }
-
-        public Pessoa Create(Pessoa pessoa)
-        {
-            try
+            if (user != null)
             {
-                _context.Add(pessoa);
-                _context.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-
-            return pessoa;
-        }
-
-        public Pessoa Update(Pessoa pessoa)
-        {
-            if (!Exists(pessoa.Id)) return null;
-
-            var result = _context.Pessoas.SingleOrDefault(p => p.Id.Equals(pessoa.Id));
-
-            if (result != null)
-            {
+                user.Enabled = false;
                 try
                 {
-
-                    _context.Entry(result).CurrentValues.SetValues(pessoa);
+                    _context.Entry(user).CurrentValues.SetValues(user);
                     _context.SaveChanges();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
-                    throw ex;
+                    throw;
                 }
-
             }
-
-            return pessoa;
-        }
-
-        public void Delete(long id)
-        {
-            var result = _context.Pessoas.SingleOrDefault(p => p.Id.Equals(id));
-
-            if (result != null)
-            {
-                _context.Pessoas.Remove(result);
-                _context.SaveChanges();
-            }      
-            
-        }
-
-                       
-
-        public bool Exists(long id)
-        {
-            return _context.Pessoas.Any(p => p.Id.Equals(id));
+            return user;
         }
     }
 }

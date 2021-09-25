@@ -1,18 +1,12 @@
 ﻿using ApiRestFull.Model;
+using ApiRestFull.Repository.Generic;
 using System.Collections.Generic;
 
 namespace ApiRestFull.Repository
 { 
     //Interface para implementação do serviço pessoa onde definimos o contrato das operações (crud)
-    public interface IPessoaRepository
+    public interface IPessoaRepository: IRepository<Pessoa>
     {
-        Pessoa Create(Pessoa pessoa);
-        Pessoa FindByYd(long id);
-        List<Pessoa> FindAll();
-        Pessoa Update(Pessoa pessoa);
-        void Delete(long id);
-        bool Exists(long id);
-
-
+        Pessoa Disable(long id);
     }
 }

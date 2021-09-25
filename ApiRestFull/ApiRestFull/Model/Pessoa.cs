@@ -23,9 +23,13 @@ namespace ApiRestFull.Model
 
         [Column("genero")] 
         public string Genero { get; set; }
+
         
         [Column("email")]
         public string Email { get; set; }
+        
+        [Column("enabled")]
+        public bool Enabled { get; set; }
 
     }
 }

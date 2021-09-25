@@ -20,7 +20,9 @@ namespace ApiRestFull.Data.Converter.Implementations
                 SobreNome = origin.SobreNome,
                 Endereco = origin.Endereco,
                 Genero = origin.Genero,
-                Email = origin.Email
+                Email = origin.Email,
+                Enabled = origin.Enabled
+                
             };
         }
 
@@ -41,7 +43,8 @@ namespace ApiRestFull.Data.Converter.Implementations
                 SobreNome = origin.SobreNome,
                 Endereco = origin.Endereco,
                 Genero = origin.Genero,
-                Email = origin.Email
+                Email = origin.Email,
+                Enabled = origin.Enabled
             };
         }
 
