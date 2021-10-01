@@ -31,6 +31,11 @@ namespace ApiRestFull.Business.Implementations
             return _converter.Parse(_repository.FindById(id)) ;
         }
 
+        public List<PessoaVO> FindByName(string firstName, string lastName)
+        {
+            return _converter.Parse(_repository.FindByName(firstName, lastName));
+        }
+
         public PessoaVO Create(PessoaVO pessoaVO)
         {
             var pessoa = _converter.Parse(pessoaVO);
@@ -54,5 +59,7 @@ namespace ApiRestFull.Business.Implementations
             var pessoaEntity = _repository.Disable(id);
             return _converter.Parse(pessoaEntity);
         }
+
+
     }
 }

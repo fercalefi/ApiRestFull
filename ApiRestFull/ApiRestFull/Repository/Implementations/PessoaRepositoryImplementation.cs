@@ -2,6 +2,7 @@
 using ApiRestFull.Model.Context;
 using ApiRestFull.Repository.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ApiRestFull.Repository.Implementations
@@ -31,6 +32,31 @@ namespace ApiRestFull.Repository.Implementations
                 }
             }
             return user;
+        }
+
+        public List<Pessoa> FindByName(string firstName, string lastName)
+        {
+            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
+            {
+                return _context.Pessoas.Where(
+                       p => p.Nome.Contains(firstName) && p.SobreNome.Contains(lastName)).ToList();
+
+            }
+            else if (string.IsNullOrWhiteSpace(firstName)  && !string.IsNullOrWhiteSpace(lastName))
+            {
+                return _context.Pessoas.Where(
+                       p =>  p.SobreNome.Contains(lastName)).ToList();
+
+            }
+            else if (!string.IsNullOrWhiteSpace(firstName) && string.IsNullOrWhiteSpace(lastName))
+            {
+                return _context.Pessoas.Where(
+                       p => p.Nome.Contains(firstName)).ToList();
+
+            }
+            return null;
+
+
         }
     }
 }

@@ -8,5 +8,7 @@ namespace ApiRestFull.Repository
     public interface IPessoaRepository: IRepository<Pessoa>
     {
         Pessoa Disable(long id);
+
+        List<Pessoa> FindByName(string firstName, string secondName);
     }
 }

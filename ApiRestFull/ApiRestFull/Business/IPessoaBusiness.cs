@@ -8,6 +8,7 @@ namespace ApiRestFull.Business
     {
         PessoaVO Create(PessoaVO pessoa);
         PessoaVO FindById(long id);
+        List<PessoaVO> FindByName(string firstName, string lastName);
         List<PessoaVO> FindAll();
         PessoaVO Update(PessoaVO pessoa);
         void Delete(long id);

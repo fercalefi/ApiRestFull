@@ -51,6 +51,21 @@ namespace ApiRestFull.Controllers
             if (pessoa == null) return NotFound();
 
             return Ok(pessoa);
+        }  
+        
+        [HttpGet("findPersonByName")]
+        [ProducesResponseType((200), Type = typeof(PessoaVO))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [TypeFilter(typeof(HyperMediaFilter))]
+        public IActionResult Get([FromQuery] string firstName, [FromQuery] string lastName)
+        {
+            var pessoa = _pessoaBusiness.FindByName(firstName, lastName);
+
+            if (pessoa == null) return NotFound();
+
+            return Ok(pessoa);
         } 
         
         [HttpPost]
