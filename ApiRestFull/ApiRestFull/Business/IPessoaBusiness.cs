@@ -1,4 +1,5 @@
 ﻿using ApiRestFull.Data.VO;
+using ApiRestFull.Hypermedia.Utils;
 using System.Collections.Generic;
 
 namespace ApiRestFull.Business
@@ -13,6 +14,8 @@ namespace ApiRestFull.Business
         PessoaVO Update(PessoaVO pessoa);
         void Delete(long id);
         PessoaVO Disable(long id);
+        PagedSearchVO<PessoaVO> FindWithPagedSearch(
+            string name, string sortDirection, int pageSize, int page);
 
 
     }

@@ -1,10 +1,12 @@
 ﻿using ApiRestFull.Hypermedia.Abstract;
+using ApiRestFull.Hypermedia.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ApiRestFull.Hypermedia
@@ -17,7 +19,7 @@ namespace ApiRestFull.Hypermedia
         }
         public bool CanEnrich(Type contentType)
         {
-            return contentType == typeof(T) || contentType == typeof(List<T>);
+            return contentType == typeof(T) || contentType == typeof(List<T>) || contentType == typeof(PagedSearchVO<T>);
         }
 
         protected abstract Task EnrichModel(T content, IUrlHelper urlHelper);
@@ -47,6 +49,15 @@ namespace ApiRestFull.Hypermedia
                         EnrichModel(element, urlHelper);
                     });
                 }
+                else if (okObjectResult.Value is PagedSearchVO<T> pagedSearch)
+                {
+                    Parallel.ForEach(pagedSearch.List.ToList(), (element) =>
+                    {
+                        EnrichModel(element, urlHelper);
+                    });
+                }
+
+
             }
             await Task.FromResult<object>(null);
         }

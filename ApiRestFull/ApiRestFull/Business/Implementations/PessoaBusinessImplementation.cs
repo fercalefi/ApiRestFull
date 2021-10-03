@@ -1,5 +1,6 @@
 ﻿using ApiRestFull.Data.Converter.Implementations;
 using ApiRestFull.Data.VO;
+using ApiRestFull.Hypermedia.Utils;
 using ApiRestFull.Model;
 using ApiRestFull.Repository;
 using ApiRestFull.Repository.Generic;
@@ -24,6 +25,36 @@ namespace ApiRestFull.Business.Implementations
         {
             return _converter.Parse(_repository.FindAll());
 
+        }
+
+        public PagedSearchVO<PessoaVO> FindWithPagedSearch(
+            string name, string sortDirection, int pageSize, int page)
+        {
+            
+            var sort = (!string.IsNullOrWhiteSpace(sortDirection)) && !sortDirection.Equals("desc") ? "asc" : "desc";
+            var size = (pageSize < 1) ? 10 : pageSize;
+            var offset = page > 0 ? (page - 1) * size : 0;
+
+            // Montando a query dinamica de acordo com os parametros
+            string query = @"select * from pessoa p where 1 = 1 ";
+            if (!string.IsNullOrWhiteSpace(name)) query = query + $"and p.nome like '%{name}%' ";
+            query += $"order by p.nome {sort} limit {size} offset {offset} "; 
+            
+            
+                            
+            string countQuery = @"select count(1) from pessoa p where 1 = 1 ";
+            if (!string.IsNullOrWhiteSpace(name)) countQuery = countQuery + $"and p.nome like '%{name}%' ";
+
+            var persons = _repository.FindWithPagedSearch(query);
+            int totalResults = _repository.GetCount(countQuery);
+
+            return new PagedSearchVO<PessoaVO> {
+                CurrentPage = page,
+                List = _converter.Parse(persons),
+                PageSize = size,
+                SortDirections = sort,
+                TotalResults = totalResults
+            };
         }
 
         public PessoaVO FindById(long id)
