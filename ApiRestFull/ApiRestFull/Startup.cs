@@ -26,6 +26,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace ApiRestFull
 {
@@ -149,12 +151,17 @@ namespace ApiRestFull
 
 
             //Injeção de dependencia - busines para ser injetado no controller
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            
+
             services.AddScoped<IPessoaBusiness, PessoaBusinessImplementation>();
-
-          
-
             services.AddScoped<IBookBusiness, BookBusinessImplementation>();
             services.AddScoped<ILoginBusiness, LoginBusinessImplementation>();
+            services.AddScoped<IFileBusiness, FileBusinessImplementation>();
+
+
             services.AddTransient<ITokenService, TokenService>();
 
 
