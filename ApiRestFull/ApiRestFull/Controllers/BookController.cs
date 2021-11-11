@@ -34,6 +34,21 @@ namespace ApiRestFull.Controllers
             return Ok(_bookBusiness.FindAll());
         }
 
+        [HttpGet("{sortDirection}/{pageSize}/{page}")]
+        [ProducesResponseType((200), Type = typeof(List<BookVO>))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [TypeFilter(typeof(HyperMediaFilter))]
+        public IActionResult Get(
+            [FromQuery] string name,
+            string sortDirection,
+            int pageSize,
+            int page)
+        {
+            return Ok(_bookBusiness.FindWithPagedSearch(name, sortDirection, pageSize, page));
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType((200), Type = typeof(BookVO))]
         [ProducesResponseType(204)]

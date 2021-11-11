@@ -1,4 +1,5 @@
 ﻿using ApiRestFull.Data.VO;
+using ApiRestFull.Hypermedia.Utils;
 using System.Collections.Generic;
 
 namespace ApiRestFull.Business.Implementations
@@ -10,6 +11,9 @@ namespace ApiRestFull.Business.Implementations
         List<BookVO> FindAll();
         BookVO Update(BookVO book);
         void Delete(long id);
+
+        PagedSearchVO<BookVO> FindWithPagedSearch(
+            string name, string sortDirection, int pageSize, int page);
 
     }
 }
